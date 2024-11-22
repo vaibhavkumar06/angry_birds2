@@ -1,4 +1,4 @@
-package com.project.angrybirds_functional.pigs;
+package com.project.angrybirds.pigs;
 
 import com.badlogic.gdx.graphics.Texture;
 
