@@ -69,7 +69,7 @@ public class LevelScreen implements Screen {
         level1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.switchToLevel1Screen(); // Navigate to Level 1 screen
+                game.switchToLevel3Screen(); // Navigate to Level 1 screen
             }
         });
         stage.addActor(level1Button);

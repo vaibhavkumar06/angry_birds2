@@ -22,15 +22,12 @@ import com.project.angrybirds.pigs.BabyPig;
 import com.project.angrybirds.pigs.DaddyPig;
 import com.project.angrybirds.pigs.Pig;
 import com.project.angrybirds.pigs.TeenPig;
-import com.project.angrybirds.structure.IceStructure;
-import com.project.angrybirds.structure.RockStructure;
-import com.project.angrybirds.structure.Structure;
-import com.project.angrybirds.structure.WoodStructure;
+import com.project.angrybirds.structure.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Level1Screen implements Screen {
+public class Level2Screen implements Screen {
 
     private MainGame game;
     private Stage stage;
@@ -52,7 +49,7 @@ public class Level1Screen implements Screen {
     private LinkedList<Structure> structures;
     private LinkedList<Pig> pigs;
 
-//    private Stage stage;
+    //    private Stage stage;
     private boolean isPaused = false;
 
 
@@ -64,7 +61,7 @@ public class Level1Screen implements Screen {
     private static final float MAX_DRAG_DISTANCE = 3f;
     private static final float RESET_POSITION_X = 16f; // Right-side x-coordinate where birds reappear after launch
 
-    public Level1Screen(MainGame game) {
+    public Level2Screen(MainGame game) {
         this.game = game;
         Box2D.init();
         world = new World(new com.badlogic.gdx.math.Vector2(0, -9.8f), true);
@@ -127,14 +124,23 @@ public class Level1Screen implements Screen {
         structures = new LinkedList<>();
 
         // Base layer of structures
-        structures.add(new WoodStructure(world, 10.5f, 2f, 0.25f, 1.5f));
-        structures.add(new WoodStructure(world, 11.5f, 2f, 0.25f, 1.5f));
-        structures.add(new RockStructure(world, 10.5f, 3.5f, 0.25f, 1.5f));
-        structures.add(new RockStructure(world, 11.5f, 3.5f, 0.25f, 1.5f));
+        structures.add(new WoodStructure(world, 10.5f, 2.5f, 0.25f, 2f));
+        structures.add(new IceStructure(world, 11f, 2.25f, 0.25f, 1.5f));
+        structures.add(new IceStructure(world, 12f, 2.25f, 0.25f, 1.5f));
+        structures.add(new WoodStructure(world, 12.5f, 2.5f, 0.25f, 2f));
 
         // Top layer of structures
-        structures.add(new IceStructure(world, 11f, 2.6f, 1.25f, 0.25f));
-        structures.add(new IceStructure(world, 11f, 4.35f, 1.25f, 0.25f));
+        structures.add(new IceStructure(world, 11.5f, 2.85f, 1.25f, 0.25f));
+        structures.add(new WoodStructure(world, 11.5f, 3.6f, 2.25f, 0.25f));
+
+        // First layer
+        structures.add(new WoodStructure(world, 11f, 4.5f, 0.25f, 1.5f));
+        structures.add(new WoodStructure(world, 12f, 4.5f, 0.25f, 1.5f));
+
+        // First top
+        structures.add(new RockStructure(world, 11.5f, 5.25f, 1.25f, 0.25f));
+        structures.add(new WoodStructure(world, 11f, 5.45f, 0.25f, 0.25f));
+        structures.add(new WoodStructure(world, 12f, 5.45f, 0.25f, 0.25f));
 
         // Create Box2D bodies for structures
         for (Structure structure : structures) {
@@ -309,10 +315,10 @@ public class Level1Screen implements Screen {
         pigs = new LinkedList<>();
 
         // Position pigs on top of the structures
-        pigs.add(new BabyPig(world, 10.5f, 2f)); // Pig on top of the ice structure
-        pigs.add(new TeenPig(world, 10.5f, 3.5f)); // Pig on top of the left wood structure
-        pigs.add(new DaddyPig(world, 11f, 4.5f)); // Pig on top of the right wood structure
-        pigs.add(new BabyPig(world, 10f, 4f)); // Pig on top of the ice structure
+        pigs.add(new BabyPig(world, 11.6f, 5.35f)); // Pig on top of the rock structure
+        pigs.add(new TeenPig(world, 11.6f, 2.75f)); // Pig on ground
+        pigs.add(new DaddyPig(world, 11.65f, 3.7f)); // Pig on top of the base top layer wood structure
+//        pigs.add(new BabyPig(world, 10f, 4f)); // Pig on top of the ice structure
     }
 
 

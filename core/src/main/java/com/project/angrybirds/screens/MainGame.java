@@ -27,6 +27,14 @@ public class MainGame extends Game {
         this.setScreen(new Level1Screen(this));
     }
 
+    public void switchToLevel2Screen() {
+        this.setScreen(new Level2Screen(this));
+    }
+
+    public void switchToLevel3Screen() {
+        this.setScreen(new Level3Screen(this));
+    }
+
 
     public String getPlayerId() {
         return playerId;
