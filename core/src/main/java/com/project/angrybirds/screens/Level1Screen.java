@@ -67,29 +67,21 @@ public class Level1Screen implements Screen {
         structures = new LinkedList<>(); // Can also use ArrayList
     }
 
-//    private void initializeStructures() {
-//        structures = new LinkedList<>();
-//
-//
-//        structures.add(new IceStructure(world, 15.75f, 2.85f, 1.75f, 0.25f)); // A small ice block
-//        structures.add(new WoodStructure(world, 15f, 2f, 0.25f, 1.5f)); // A tall wooden block
-//        structures.add(new WoodStructure(world, 16.5f, 2f, 0.25f, 1.5f)); // A tall wooden block
-//
-//        // Create Box2D bodies for structures
-//        for (Structure structure : structures) {
-//            createStructureBody(structure);
-//        }
-//    }
-
     private void initializeStructures() {
         structures = new LinkedList<>();
 
         // Base layer of structures
-        structures.add(new WoodStructure(world, 9.5f, 2f, 0.25f, 1.5f));
         structures.add(new WoodStructure(world, 10.5f, 2f, 0.25f, 1.5f));
+        structures.add(new WoodStructure(world, 11.5f, 2f, 0.25f, 1.5f));
+        structures.add(new RockStructure(world, 10.5f, 3.5f, 0.25f, 1.5f));
+        structures.add(new RockStructure(world, 11.5f, 3.5f, 0.25f, 1.5f));
+
+
+
 
         // Top layer of structures
-        structures.add(new IceStructure(world, 10f, 2.6f, 1.25f, 0.25f));
+        structures.add(new IceStructure(world, 11f, 2.6f, 1.25f, 0.25f));
+        structures.add(new IceStructure(world, 11f, 4.35f, 1.25f, 0.25f));
 
         // Create Box2D bodies for structures
         for (Structure structure : structures) {
@@ -99,7 +91,7 @@ public class Level1Screen implements Screen {
 
     private void createStructureBody(Structure structure) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody; // Structures are static by default
+        bodyDef.type = BodyDef.BodyType.DynamicBody; // Structures are dynamic by default
         bodyDef.position.set(structure.x, structure.y);
 
         Body body = world.createBody(bodyDef);
@@ -108,10 +100,10 @@ public class Level1Screen implements Screen {
         shape.setAsBox(0.5f, 0.5f); // Assume each structure is 1x1 meter in size; adjust as needed
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.2f; // Slight bounce on collision
+        fixtureDef.shape = shape; // Define the shape (e.g., a polygon or box)
+        fixtureDef.density = 0.5f; // Adjust density for realistic weight
+        fixtureDef.friction = 0.3f; // Typical friction value
+        fixtureDef.restitution = 0.2f; // Low bounce for structures
 
         body.createFixture(fixtureDef);
         shape.dispose();
@@ -188,18 +180,6 @@ public class Level1Screen implements Screen {
 
     }
 
-//    private void handleBirdHitsPig(Birds bird, Pig pig) {
-//        if (pig.isAlive()) {
-//            pig.takeDamage(1); // Reduce health by 1 (you can adjust this)
-//
-//            // If pig's health is <= 0, it gets destroyed
-//            if (!pig.isAlive()) {
-//                // You can add special effects or sound here
-//                // Optionally, remove the pig from the list if you're keeping track of them
-//            }
-//        }
-//    }
-
     private void handleBirdHitsPig(Birds bird, Pig pig) {
         if (pig.isAlive()) {
             pig.takeDamage(1); // Reduce health by 1
@@ -241,14 +221,6 @@ public class Level1Screen implements Screen {
     }
 
 
-//    private void handleBirdHitsStructure(Birds bird, Structure structure) {
-//        structure.takeDamage(50); // Reduce structure durability (example: 50 damage)
-//        if (structure.isBroken()) {
-//            world.destroyBody(structure.getBody()); // Remove broken structure from the physics world
-//            structure.setBody(null); // Unlink body
-//        }
-//    }
-
     private void handleBirdHitsStructure(Birds bird, Structure structure) {
         structure.takeDamage(50); // Apply damage to the structure
         if (structure.isBroken()) {
@@ -261,19 +233,14 @@ public class Level1Screen implements Screen {
     }
 
 
-//    private void initializePigs() {
-//        pigs.add(new BabyPig(world, 8f, 2f));  // Baby Pig
-//        pigs.add(new TeenPig(world, 9f, 2.5f));  // Teen Pig
-//        pigs.add(new DaddyPig(world, 10f, 3f));  // Daddy Pig
-//    }
-
     private void initializePigs() {
         pigs = new LinkedList<>();
 
         // Position pigs on top of the structures
-        pigs.add(new BabyPig(world, 9.5f, 4f)); // Pig on top of the ice structure
-        pigs.add(new TeenPig(world, 10f, 2.5f)); // Pig on top of the left wood structure
-        pigs.add(new DaddyPig(world, 11f, 2.5f)); // Pig on top of the right wood structure
+        pigs.add(new BabyPig(world, 10.5f, 2f)); // Pig on top of the ice structure
+        pigs.add(new TeenPig(world, 10.5f, 3.5f)); // Pig on top of the left wood structure
+        pigs.add(new DaddyPig(world, 11f, 4.5f)); // Pig on top of the right wood structure
+        pigs.add(new BabyPig(world, 10f, 4f)); // Pig on top of the ice structure
     }
 
 
@@ -508,16 +475,14 @@ public class Level1Screen implements Screen {
         redBird.dispose();
         yellowBird.dispose();
         blackBird.dispose();
+
+        for (Structure structure : structures) {
+            structure.dispose();
+        }
+
+        for (Pig pig : pigs) {
+            pig.dispose();
+        }
     }
 }
-//        for (Structure structure : structures) {
-//            structure.dispose();
-//        }
-//
-//        for (Pig pig : pigs) {
-//            pig.dispose();
-//        }
-//
-//    }
-//}
 

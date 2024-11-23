@@ -6,7 +6,7 @@ public class DaddyPig extends Pig {
     private Body body;
 
     public DaddyPig(World world, float x, float y) {
-        super(x, y, 3, "daddypig.png");  // Requires 3 hits to defeat
+        super(x, y, 2, "daddypig.png");  // Requires 3 hits to defeat
         createBox2DBody(world);
     }
 
