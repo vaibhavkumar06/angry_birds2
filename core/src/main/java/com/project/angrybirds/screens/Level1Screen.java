@@ -67,14 +67,29 @@ public class Level1Screen implements Screen {
         structures = new LinkedList<>(); // Can also use ArrayList
     }
 
+//    private void initializeStructures() {
+//        structures = new LinkedList<>();
+//
+//
+//        structures.add(new IceStructure(world, 15.75f, 2.85f, 1.75f, 0.25f)); // A small ice block
+//        structures.add(new WoodStructure(world, 15f, 2f, 0.25f, 1.5f)); // A tall wooden block
+//        structures.add(new WoodStructure(world, 16.5f, 2f, 0.25f, 1.5f)); // A tall wooden block
+//
+//        // Create Box2D bodies for structures
+//        for (Structure structure : structures) {
+//            createStructureBody(structure);
+//        }
+//    }
+
     private void initializeStructures() {
         structures = new LinkedList<>();
 
+        // Base layer of structures
+        structures.add(new WoodStructure(world, 9.5f, 2f, 0.25f, 1.5f));
+        structures.add(new WoodStructure(world, 10.5f, 2f, 0.25f, 1.5f));
 
-        structures.add(new IceStructure(world, 15.75f, 2.85f, 1.75f, 0.25f)); // A small ice block
-        structures.add(new WoodStructure(world, 15f, 2f, 0.25f, 1.5f)); // A tall wooden block
-        structures.add(new WoodStructure(world, 16.5f, 2f, 0.25f, 1.5f)); // A tall wooden block
-//        structures.add(new RockStructure(world, 15f, 4f, 0.25f, 1f)); // A wide rock block
+        // Top layer of structures
+        structures.add(new IceStructure(world, 10f, 2.6f, 1.25f, 0.25f));
 
         // Create Box2D bodies for structures
         for (Structure structure : structures) {
@@ -103,7 +118,6 @@ public class Level1Screen implements Screen {
 
         structure.setBody(body); // Link the structure to its body
     }
-
 
 
     @Override
@@ -160,42 +174,107 @@ public class Level1Screen implements Screen {
             }
 
             @Override
-            public void endContact(Contact contact) {}
+            public void endContact(Contact contact) {
+            }
+
             @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {}
+            public void preSolve(Contact contact, Manifold oldManifold) {
+            }
+
             @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {}
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+            }
         });
 
     }
 
+//    private void handleBirdHitsPig(Birds bird, Pig pig) {
+//        if (pig.isAlive()) {
+//            pig.takeDamage(1); // Reduce health by 1 (you can adjust this)
+//
+//            // If pig's health is <= 0, it gets destroyed
+//            if (!pig.isAlive()) {
+//                // You can add special effects or sound here
+//                // Optionally, remove the pig from the list if you're keeping track of them
+//            }
+//        }
+//    }
+
     private void handleBirdHitsPig(Birds bird, Pig pig) {
         if (pig.isAlive()) {
-            pig.takeDamage(1); // Reduce health by 1 (you can adjust this)
-
-            // If pig's health is <= 0, it gets destroyed
+            pig.takeDamage(1); // Reduce health by 1
             if (!pig.isAlive()) {
-                // You can add special effects or sound here
-                // Optionally, remove the pig from the list if you're keeping track of them
+                world.destroyBody(pig.getBody()); // Destroy the pig's body
+                pig.setBody(null);
+
+                // Move structures or pigs based on bird's final impact
+                adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
+            }
+        }
+    }
+
+    private void adjustNearbyObjects(float impactX, float impactY) {
+        float adjustmentRadius = 2f; // Define a radius for nearby objects
+        float displacement = 0.5f;  // Displacement for affected objects
+
+        // Adjust structures
+        for (Structure structure : structures) {
+            if (structure.getBody() != null) {
+                float distance = Math.abs(structure.x - impactX);
+                if (distance < adjustmentRadius) {
+                    structure.setBody(null); // Unlink current body
+                    structure.x += displacement; // Adjust position
+                    createStructureBody(structure); // Recreate body with new position
+                }
+            }
+        }
+
+        // Adjust pigs
+        for (Pig pig : pigs) {
+            if (pig.isAlive() && pig.getBody() != null) {
+                float distance = Math.abs(pig.getBody().getPosition().x - impactX);
+                if (distance < adjustmentRadius) {
+                    pig.getBody().setTransform(pig.getBody().getPosition().x + displacement, pig.getBody().getPosition().y, 0);
+                }
             }
         }
     }
 
 
+//    private void handleBirdHitsStructure(Birds bird, Structure structure) {
+//        structure.takeDamage(50); // Reduce structure durability (example: 50 damage)
+//        if (structure.isBroken()) {
+//            world.destroyBody(structure.getBody()); // Remove broken structure from the physics world
+//            structure.setBody(null); // Unlink body
+//        }
+//    }
+
     private void handleBirdHitsStructure(Birds bird, Structure structure) {
-        structure.takeDamage(50); // Reduce structure durability (example: 50 damage)
+        structure.takeDamage(50); // Apply damage to the structure
         if (structure.isBroken()) {
-            world.destroyBody(structure.getBody()); // Remove broken structure from the physics world
-            structure.setBody(null); // Unlink body
+            world.destroyBody(structure.getBody()); // Destroy the structure's body
+            structure.setBody(null);
+
+            // Move structures or pigs based on bird's final impact
+            adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
         }
     }
 
-    private void initializePigs() {
-        pigs.add(new BabyPig(world, 8f, 2f));  // Baby Pig
-        pigs.add(new TeenPig(world, 9f, 2.5f));  // Teen Pig
-        pigs.add(new DaddyPig(world, 10f, 3f));  // Daddy Pig
-    }
 
+//    private void initializePigs() {
+//        pigs.add(new BabyPig(world, 8f, 2f));  // Baby Pig
+//        pigs.add(new TeenPig(world, 9f, 2.5f));  // Teen Pig
+//        pigs.add(new DaddyPig(world, 10f, 3f));  // Daddy Pig
+//    }
+
+    private void initializePigs() {
+        pigs = new LinkedList<>();
+
+        // Position pigs on top of the structures
+        pigs.add(new BabyPig(world, 9.5f, 4f)); // Pig on top of the ice structure
+        pigs.add(new TeenPig(world, 10f, 2.5f)); // Pig on top of the left wood structure
+        pigs.add(new DaddyPig(world, 11f, 2.5f)); // Pig on top of the right wood structure
+    }
 
 
     private void initializeBirds() {
@@ -265,124 +344,6 @@ public class Level1Screen implements Screen {
         bird.body.setType(BodyDef.BodyType.StaticBody);
     }
 
-//    @Override
-//    public void render(float delta) {
-//        Gdx.gl.glClearColor(0, 0, 0, 1);
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//
-//        world.step(1 / 60f, 6, 2);
-//
-//        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-//        stage.draw();
-//
-//        if (isBirdTransitioning) {
-//            // Transition the bird towards the catapult
-//            float currentX = currentBird.body.getPosition().x;
-//            float currentY = currentBird.body.getPosition().y;
-//
-//            float dx = CATAPULT_TOP_X - currentX;
-//            float dy = CATAPULT_TOP_Y - currentY;
-//
-//            float distance = (float) Math.sqrt(dx * dx + dy * dy);
-//            if (distance < 0.1f) {
-//                isBirdTransitioning = false;
-//                moveBirdToCatapult(currentBird);
-//            } else {
-//                float stepX = dx / distance * transitionSpeed * delta;
-//                float stepY = dy / distance * transitionSpeed * delta;
-//                currentBird.body.setTransform(currentX + stepX, currentY + stepY, 0);
-//            }
-//        }
-//
-//        if (Gdx.input.isTouched() && !isBirdTransitioning) {
-//            isDragging = true;
-//
-//            float mouseX = Gdx.input.getX() / PIXELS_PER_METER;
-//            float mouseY = (Gdx.graphics.getHeight() - Gdx.input.getY()) / PIXELS_PER_METER;
-//
-//            float dx = mouseX - CATAPULT_TOP_X;
-//            float dy = mouseY - CATAPULT_TOP_Y;
-//            float dragDistance = (float) Math.sqrt(dx * dx + dy * dy);
-//
-//            if (dragDistance > MAX_DRAG_DISTANCE) {
-//                float scalingFactor = MAX_DRAG_DISTANCE / dragDistance;
-//                dx *= scalingFactor;
-//                dy *= scalingFactor;
-//            }
-//
-//            currentBird.body.setTransform(CATAPULT_TOP_X + dx, CATAPULT_TOP_Y + dy, 0);
-//        } else if (isDragging) {
-//            isDragging = false;
-//
-//            float launchDx = currentBird.body.getPosition().x - CATAPULT_TOP_X;
-//            float launchDy = currentBird.body.getPosition().y - CATAPULT_TOP_Y;
-//
-//            currentBird.body.setType(BodyDef.BodyType.DynamicBody);
-//            currentBird.body.applyLinearImpulse(
-//                -launchDx * 5f,
-//                -launchDy * 5f,
-//                currentBird.body.getWorldCenter().x,
-//                currentBird.body.getWorldCenter().y,
-//                true
-//            );
-//        }
-//
-//        if (currentBird != null && currentBird.body.getPosition().x > 10f) { // Arbitrary screen edge x-coordinate
-//            resetBirdToGround(currentBird);
-//            if (!birdsQueue.isEmpty()) {
-//                currentBird = birdsQueue.poll();
-//                startBirdTransition(currentBird);
-//            } else {
-//                currentBird = null;
-//            }
-//        }
-//
-//        batch.begin();
-//        batch.draw(catapultTexture,
-//            catapultBody.getPosition().x * PIXELS_PER_METER - 30,
-//            catapultBody.getPosition().y * PIXELS_PER_METER - 30,
-//            100, 150);
-//
-//
-//
-//        drawBird(redBird);
-//        drawBird(yellowBird);
-//        drawBird(blackBird);
-//
-//        for (Structure structure : structures) {
-//            batch.draw(structure.getTexture(),
-//                (structure.x - structure.width / 2) * PIXELS_PER_METER,  // Center the texture
-//                (structure.y - structure.height / 2) * PIXELS_PER_METER,
-//                structure.width * PIXELS_PER_METER,                     // Scale width
-//                structure.height * PIXELS_PER_METER);                   // Scale height
-//        }
-//
-//        for (Pig pig : pigs) {
-//            if (pig.isAlive()) {
-//                Body body = null;
-//
-//                // Safely get the body for the specific pig type
-//                if (pig instanceof BabyPig) {
-//                    body = ((BabyPig) pig).getBody();
-//                } else if (pig instanceof TeenPig) {
-//                    body = ((TeenPig) pig).getBody();
-//                } else if (pig instanceof DaddyPig) {
-//                    body = ((DaddyPig) pig).getBody();
-//                }
-//
-//                if (body != null) {
-//                    batch.draw(pig.getTexture(),
-//                        (body.getPosition().x - 0.3f) * PIXELS_PER_METER, // Center the pig
-//                        (body.getPosition().y - 0.3f) * PIXELS_PER_METER,
-//                        0.6f * PIXELS_PER_METER, // Width
-//                        0.6f * PIXELS_PER_METER); // Height
-//                }
-//            }
-//        }
-//
-//
-//        batch.end();
-//    }
 
     @Override
     public void render(float delta) {
@@ -526,13 +487,16 @@ public class Level1Screen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
@@ -544,14 +508,16 @@ public class Level1Screen implements Screen {
         redBird.dispose();
         yellowBird.dispose();
         blackBird.dispose();
-
-        for (Structure structure : structures) {
-            structure.dispose();
-        }
-
-        for (Pig pig : pigs) {
-            pig.dispose();
-        }
-
     }
 }
+//        for (Structure structure : structures) {
+//            structure.dispose();
+//        }
+//
+//        for (Pig pig : pigs) {
+//            pig.dispose();
+//        }
+//
+//    }
+//}
+
