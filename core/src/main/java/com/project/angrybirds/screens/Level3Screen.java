@@ -24,6 +24,7 @@ import com.project.angrybirds.pigs.Pig;
 import com.project.angrybirds.pigs.TeenPig;
 import com.project.angrybirds.structure.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -41,6 +42,7 @@ public class Level3Screen implements Screen {
     private Queue<Birds> birdsQueue;
     private boolean isDragging = false;
     private World world;
+    private int level;
     private Body catapultBody;
     private boolean isBirdTransitioning = false;
     private float transitionSpeed = 2f;
@@ -76,28 +78,26 @@ public class Level3Screen implements Screen {
         // Create a Skin for the buttons
         Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // Use a prebuilt skin or your custom skin
 
-// Resume Button
+
+        // Resume Button
         TextButton resumeButton = new TextButton("Resume", skin);
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isPaused = false;
-                pauseMenu.remove();
+                pauseMenu.setVisible(false);
+                loadGameState(); // Load game state on resume
             }
         });
 
         // Save Button
         TextButton saveButton = new TextButton("Save Game", skin);
-//        saveButton.addListener(event -> {
-//            // Example: Create a GameState with current game data
-//            GameState currentState = new GameState(playerId.getX(), player.getY(), player.getScore(), currentLevel);
-//
-//            // Save the game state using GameStateManager
-//            GameStateManager gameStateManager = new GameStateManager();
-//            gameStateManager.saveGame(currentState);
-//
-//            return true;
-//        });
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                saveGameState(); // Save game state on button press
+            }
+        });
 
 
 // Exit Button
@@ -118,6 +118,20 @@ public class Level3Screen implements Screen {
         stage.addActor(pauseMenu);
     }
 
+    //Save game
+    public void saveGameState() {
+        HashMap<String, Object> gameState = new HashMap<>();
+        gameState.put("levelNumber", level);
+        GameStateManager.saveGame(gameState);
+    }
+
+    //load game
+    public void loadGameState() {
+        HashMap<String, Object> gameState = GameStateManager.loadGame();
+        if (gameState != null) {
+            level = (int) gameState.getOrDefault("levelNumber", level);
+        }
+    }
 
 
     private void initializeStructures() {
