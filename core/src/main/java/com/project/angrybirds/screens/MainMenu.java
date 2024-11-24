@@ -42,7 +42,7 @@ public class MainMenu implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
         // Buttons setup
-        resumeButton = new TextButton("Resume Game", skin);
+        resumeButton = new TextButton("Restore Game", skin);
         resumeButton.setPosition(900, 480);
         resumeButton.setSize(150, 40);
         stage.addActor(resumeButton);
@@ -62,7 +62,7 @@ public class MainMenu implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Placeholder for future save game functionality
-                System.out.println("Resume Game clicked (not implemented yet).");
+                System.out.println("Restore Game clicked (not implemented yet).");
             }
         });
 
