@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.project.angrybirds.screens.GameStateManager;
+import java.util.HashMap;
+
 
 public class MainMenu implements Screen {
     private Stage stage;
@@ -61,15 +64,41 @@ public class MainMenu implements Screen {
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Placeholder for future save game functionality
-                System.out.println("Restore Game clicked (not implemented yet).");
+                // Load game state
+                HashMap<String, Object> gameState = GameStateManager.loadGame();
+
+                if (gameState != null && gameState.containsKey("levelNumber")) {
+                    int savedLevel = (int) gameState.get("levelNumber");
+                    System.out.println("Restoring game at level " + savedLevel);
+                    game.switchToLevelScreen(); // Switch to the saved level
+                } else {
+                    System.out.println("No saved game found or invalid save data.");
+                }
             }
         });
+
+//        resumeButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                int savedLevel = game.getGameStateManager().loadSavedLevel(); // Retrieves the saved level number
+//
+//                if (savedLevel == 1) {
+//                    game.switchToLevel1Screen();
+//                } else if (savedLevel == 2) {
+//                    game.switchToLevel2Screen();
+//                } else if (savedLevel == 3) {
+//                    game.switchToLevel3Screen();
+//                } else {
+//                    System.out.println("No saved game found or invalid level.");
+//                }
+//            }
+//        });
+
 
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.switchToLevelScreen();
+                game.switchToLevelScreen(); // Start a new game at level 1
             }
         });
 
