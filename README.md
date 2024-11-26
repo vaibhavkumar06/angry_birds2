@@ -1,35 +1,58 @@
-# Angry_Birds
+# **CSE201 Project, Angry Birds clone**
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+### **Project Description**
+This is a Java-based clone of the popular Angry Birds game, built using the libGDX framework. The game features a level selection screen, engaging physics-based gameplay, and a scoring system. It’s designed to replicate the core mechanics of the original Angry Birds game while serving as a hands-on learning project.
 
-This project was generated with a template including simple application launchers and an empty `ApplicationListener` implementation.
+---
 
-## Platforms
+## **Features**
+- Level selection screen with locked and unlocked levels.
+- Realistic projectile motion using physics.
+- Collision detection hasnt been implemented in the project yet.
+- Back button for easy navigation in GUI interface.
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+---
 
-## Gradle
+## **Setup and Installation**
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+### **Prerequisites**
+- Java Development Kit (JDK) 8 or higher.
+- IntelliJ IDEA (or any other Java IDE).
+- libGDX framework installed.
+- Junit4 jar external library.
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
-# angry_birds2
-# angry_birds2
+### **Steps**
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/vaibhavkumar06/angry_birds2.git
+2. Open the project in your preferred IDE.
+3. Import the libGDX dependencies.
+4. Run the MainMenuLauncher class in angry_birds-main > lwjgl3 > src > main > java > com.project.angrybirds.lwjgl3 > MainMenuLauncher.java
+
+
+### **Gameplay instructions**
+1. Select a level from the level selection screen.
+2. Use your mouse or touchpad to aim and launch the bird. 
+3. Use the "Back" button to return to the previous screen.
+
+### **Dependencies**
+1. libGDX: Framework for game development.
+2. Box2D for physics.
+3. Junit4 for testing.
+
+
+### **Known issues**
+1. Collision detection is not working well.
+2. The launching logic could have been better.
+3. Win-Loose logic hasnt been implemented.
+
+### **Acknowlegement**
+1. Game mechanics inspired by Angry Birds by Rovio Entertainment.
+2. Tutorials and resources from the libGDX Wiki.
+
+### **Team Members**
+-Sanskar Jain, EVE, 2023486
+-Vaibhav Kumar, ECE, 2023572 
+
+

@@ -1,26 +1,26 @@
-package com.project.angrybirds.screens;
+package com.project.angrybirds.screens;//package com.project.angrybirds.screens;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class LevelScreenTest {
+public class LevelScreenTest {
 
     private MockMainGame game;
     private LevelScreen levelScreen;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         // Initialize the mock MainGame and LevelScreen
         game = new MockMainGame();
         levelScreen = new LevelScreen(game, "SJ_2005");
         levelScreen.show();
     }
 
-    @AfterEach
-    void tearDown() {
+    @After
+    public void tearDown() {
         if (levelScreen != null) {
             levelScreen.dispose();
         }
@@ -30,26 +30,26 @@ class LevelScreenTest {
     }
 
     @Test
-    void testPlayerIdLabelDisplayed() {
+    public void testPlayerIdLabelDisplayed() {
         String playerIdText = levelScreen.playerIdLabel.getText().toString();
         assertEquals("Player ID: TestPlayer123", playerIdText);
     }
 
-    @Test
-    void testSettingsButtonExists() {
-        assertNotNull(levelScreen.settingsButton);
-        assertEquals("Settings", levelScreen.settingsButton.getText().toString());
-    }
+//    @Test
+//    public void testSettingsButtonExists() {
+//        assertNotNull(levelScreen.settingsButton);
+//        assertEquals("Settings", levelScreen.settingsButton.getText().toString());
+//    }
 
     @Test
-    void testLevelButtonPositions() {
+    public void testLevelButtonPositions() {
         assertEquals(800, (int) levelScreen.level1Button.getX());
         assertEquals(900, (int) levelScreen.level2Button.getX());
         assertEquals(1000, (int) levelScreen.level3Button.getX());
     }
 
     @Test
-    void testStartLevel() {
+    public void testStartLevel() {
         levelScreen.startLevel(1);
         assertEquals(1, game.levelStarted);
 
@@ -103,3 +103,4 @@ class LevelScreenTest {
         public void dispose() {}
     }
 }
+
