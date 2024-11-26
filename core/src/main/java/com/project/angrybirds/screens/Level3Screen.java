@@ -5,19 +5,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.project.angrybirds.birds.Birds;
-import com.project.angrybirds.birds.BlackBird;
-import com.project.angrybirds.birds.RedBird;
-import com.project.angrybirds.birds.YellowBird;
+import com.project.angrybirds.birds.*;
 import com.project.angrybirds.pigs.BabyPig;
 import com.project.angrybirds.pigs.DaddyPig;
 import com.project.angrybirds.pigs.Pig;
@@ -37,7 +32,7 @@ public class Level3Screen implements Screen {
     private SpriteBatch batch;
     private Birds redBird;
     private Birds yellowBird;
-    private Birds blackBird;
+    private Birds eagleBird;
     private Birds currentBird;
     private Queue<Birds> birdsQueue;
     private boolean isDragging = false;
@@ -340,13 +335,13 @@ public class Level3Screen implements Screen {
         // Initialize birds at ground level near the catapult initially
         redBird = new RedBird(world, CATAPULT_TOP_X - 1f, GROUND_LEVEL);
         yellowBird = new YellowBird(world, CATAPULT_TOP_X - 2f, GROUND_LEVEL);
-        blackBird = new BlackBird(world, CATAPULT_TOP_X - 3f, GROUND_LEVEL);
+        eagleBird = new EagleBird(world, CATAPULT_TOP_X - 3f, GROUND_LEVEL);
 
         // Queue the birds
         birdsQueue = new LinkedList<>();
         birdsQueue.add(redBird);
         birdsQueue.add(yellowBird);
-        birdsQueue.add(blackBird);
+        birdsQueue.add(eagleBird);
 
         // Set all birds as StaticBody initially
         for (Birds bird : birdsQueue) {
@@ -492,7 +487,7 @@ public class Level3Screen implements Screen {
 
         drawBird(redBird);
         drawBird(yellowBird);
-        drawBird(blackBird);
+        drawBird(eagleBird);
 
         for (Structure structure : structures) {
             batch.draw(structure.getTexture(),
@@ -574,7 +569,7 @@ public class Level3Screen implements Screen {
         world.dispose();
         redBird.dispose();
         yellowBird.dispose();
-        blackBird.dispose();
+        eagleBird.dispose();
 
         for (Structure structure : structures) {
             structure.dispose();

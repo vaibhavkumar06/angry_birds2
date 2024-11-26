@@ -377,7 +377,7 @@ public class Level1Screen implements Screen {
     }
 
     private void moveBirdToCatapult(Birds bird) {
-        bird.body.setTransform(CATAPULT_TOP_X, CATAPULT_TOP_Y-0.5f, 0);
+        bird.body.setTransform(CATAPULT_TOP_X, CATAPULT_TOP_Y, 0);
         bird.body.setLinearVelocity(10, 10);
         bird.body.setAngularVelocity(0);
         bird.body.setType(BodyDef.BodyType.StaticBody);
@@ -514,7 +514,7 @@ public class Level1Screen implements Screen {
         batch.end();
     }
 
-//Save game
+    //Save game
     public void saveGameState() {
         HashMap<String, Object> gameState = new HashMap<>();
         gameState.put("levelNumber", level);
@@ -528,13 +528,6 @@ public class Level1Screen implements Screen {
             level = (int) gameState.getOrDefault("levelNumber", level);
         }
     }
-
-
-//    // Call this when the player wants to save the game, e.g., on button press
-//    saveGameState();
-//
-//    // Call this when the player wants to load the game, e.g., on level restart
-//    loadGameState();
 
 
     private void resetBirdToGround(Birds bird) {

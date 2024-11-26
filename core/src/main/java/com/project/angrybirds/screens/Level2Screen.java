@@ -14,10 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.project.angrybirds.birds.Birds;
-import com.project.angrybirds.birds.BlackBird;
-import com.project.angrybirds.birds.RedBird;
-import com.project.angrybirds.birds.YellowBird;
+import com.project.angrybirds.birds.*;
 import com.project.angrybirds.pigs.BabyPig;
 import com.project.angrybirds.pigs.DaddyPig;
 import com.project.angrybirds.pigs.Pig;
@@ -36,7 +33,7 @@ public class Level2Screen implements Screen {
     private Texture catapultTexture;
     private SpriteBatch batch;
     private Birds redBird;
-    private Birds yellowBird;
+    private Birds eagleBird;
     private Birds blackBird;
     private Birds currentBird;
     private Queue<Birds> birdsQueue;
@@ -78,19 +75,6 @@ public class Level2Screen implements Screen {
         // Create a Skin for the buttons
         Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // Use a prebuilt skin or your custom skin
 
-//// Resume Button
-//        TextButton resumeButton = new TextButton("Resume", skin);
-//        resumeButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                isPaused = false;
-//                pauseMenu.remove();
-//            }
-//        });
-//
-//        // Save Button
-//        TextButton saveButton = new TextButton("Save Game", skin);
-
 
         // Resume Button
         TextButton resumeButton = new TextButton("Resume", skin);
@@ -131,20 +115,6 @@ public class Level2Screen implements Screen {
         stage.addActor(pauseMenu);
     }
 
-    //Save game
-    public void saveGameState() {
-        HashMap<String, Object> gameState = new HashMap<>();
-        gameState.put("levelNumber", level);
-        GameStateManager.saveGame(gameState);
-    }
-
-    //load game
-    public void loadGameState() {
-        HashMap<String, Object> gameState = GameStateManager.loadGame();
-        if (gameState != null) {
-            level = (int) gameState.getOrDefault("levelNumber", level);
-        }
-    }
 
     private void initializeStructures() {
         structures = new LinkedList<>();
@@ -351,13 +321,13 @@ public class Level2Screen implements Screen {
     private void initializeBirds() {
         // Initialize birds at ground level near the catapult initially
         redBird = new RedBird(world, CATAPULT_TOP_X - 1f, GROUND_LEVEL);
-        yellowBird = new YellowBird(world, CATAPULT_TOP_X - 2f, GROUND_LEVEL);
+        eagleBird = new EagleBird(world, CATAPULT_TOP_X - 2f, GROUND_LEVEL);
         blackBird = new BlackBird(world, CATAPULT_TOP_X - 3f, GROUND_LEVEL);
 
         // Queue the birds
         birdsQueue = new LinkedList<>();
         birdsQueue.add(redBird);
-        birdsQueue.add(yellowBird);
+        birdsQueue.add(eagleBird);
         birdsQueue.add(blackBird);
 
         // Set all birds as StaticBody initially
@@ -409,7 +379,7 @@ public class Level2Screen implements Screen {
     }
 
     private void moveBirdToCatapult(Birds bird) {
-        bird.body.setTransform(CATAPULT_TOP_X, CATAPULT_TOP_Y-0.5f, 0);
+        bird.body.setTransform(CATAPULT_TOP_X, CATAPULT_TOP_Y, 0);
         bird.body.setLinearVelocity(10, 10);
         bird.body.setAngularVelocity(0);
         bird.body.setType(BodyDef.BodyType.StaticBody);
@@ -503,7 +473,7 @@ public class Level2Screen implements Screen {
             100, 100);
 
         drawBird(redBird);
-        drawBird(yellowBird);
+        drawBird(eagleBird);
         drawBird(blackBird);
 
         for (Structure structure : structures) {
@@ -546,6 +516,21 @@ public class Level2Screen implements Screen {
         batch.end();
     }
 
+    //Save game
+    public void saveGameState() {
+        HashMap<String, Object> gameState = new HashMap<>();
+        gameState.put("levelNumber", level);
+        GameStateManager.saveGame(gameState);
+    }
+
+    //load game
+    public void loadGameState() {
+        HashMap<String, Object> gameState = GameStateManager.loadGame();
+        if (gameState != null) {
+            level = (int) gameState.getOrDefault("levelNumber", level);
+        }
+    }
+
 
     private void resetBirdToGround(Birds bird) {
         bird.body.setType(BodyDef.BodyType.StaticBody);
@@ -585,7 +570,7 @@ public class Level2Screen implements Screen {
         batch.dispose();
         world.dispose();
         redBird.dispose();
-        yellowBird.dispose();
+        eagleBird.dispose();
         blackBird.dispose();
 
         for (Structure structure : structures) {
