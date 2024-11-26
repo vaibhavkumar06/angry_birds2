@@ -52,7 +52,7 @@ This is a Java-based clone of the popular Angry Birds game, built using the libG
 2. Tutorials and resources from the libGDX Wiki.
 
 ### **Team Members**
--Sanskar Jain, EVE, 2023486
--Vaibhav Kumar, ECE, 2023572 
+1. Sanskar Jain, EVE, 2023486
+2. Vaibhav Kumar, ECE, 2023572 
 
 
