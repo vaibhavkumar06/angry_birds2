@@ -39,8 +39,8 @@ public class LevelScreen implements Screen {
 
         // Load textures
         level1UnlockedTexture = new Texture(Gdx.files.internal("level1_unlocked.png"));
-        level2UnlockedTexture = new Texture(Gdx.files.internal("level1_unlocked.png"));
-        level3UnlockedTexture = new Texture(Gdx.files.internal("level1_unlocked.png"));
+        level2UnlockedTexture = new Texture(Gdx.files.internal("level2_unlocked.png"));
+        level3UnlockedTexture = new Texture(Gdx.files.internal("level3_unlocked.png"));
         backgroundTexture = new Texture(Gdx.files.internal("l_background2.jpg"));
 
         // Load UI skin

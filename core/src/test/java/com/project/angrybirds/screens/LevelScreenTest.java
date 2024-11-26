@@ -35,11 +35,6 @@ public class LevelScreenTest {
         assertEquals("Player ID: TestPlayer123", playerIdText);
     }
 
-//    @Test
-//    public void testSettingsButtonExists() {
-//        assertNotNull(levelScreen.settingsButton);
-//        assertEquals("Settings", levelScreen.settingsButton.getText().toString());
-//    }
 
     @Test
     public void testLevelButtonPositions() {

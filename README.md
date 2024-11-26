@@ -13,6 +13,9 @@ This is a Java-based clone of the popular Angry Birds game, built using the libG
 
 ---
 
+## **Demo Video**
+Goes by the name "demo_video.mkv" in the angry_birds-main directory.
+
 ## **Setup and Installation**
 
 
@@ -29,7 +32,6 @@ This is a Java-based clone of the popular Angry Birds game, built using the libG
 2. Open the project in your preferred IDE.
 3. Import the libGDX dependencies.
 4. Run the MainMenuLauncher class in angry_birds-main > lwjgl3 > src > main > java > com.project.angrybirds.lwjgl3 > MainMenuLauncher.java
-
 
 ### **Gameplay instructions**
 1. Select a level from the level selection screen.
