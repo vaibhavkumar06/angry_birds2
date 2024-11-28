@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -65,6 +66,10 @@ public class Level2Screen implements Screen {
         Box2D.init();
         world = new World(new com.badlogic.gdx.math.Vector2(0, -9.8f), true);
         batch = new SpriteBatch();
+
+
+
+//        body.setUserData(this);
     }
 
     private void showPauseMenu() {
@@ -146,24 +151,40 @@ public class Level2Screen implements Screen {
 
     private void createStructureBody(Structure structure) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody; // Structures are dynamic by default
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(structure.x, structure.y);
 
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(structure.x, structure.y); // Assume each structure is 1x1 meter in size; adjust as needed
+        shape.setAsBox(structure.width / 2, structure.height / 2);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape; // Define the shape (e.g., a polygon or box)
-        fixtureDef.density = 0.1f; // Adjust density for realistic weight
-        fixtureDef.friction = 0.3f; // Typical friction value
-        fixtureDef.restitution = 0.1f; // Low bounce for structures
+        fixtureDef.shape = shape;
+        fixtureDef.density = 0.5f; // Adjust density
+        fixtureDef.friction = 0.8f; // Increase friction
+        fixtureDef.restitution = 0.0f; // Reduce bouncing
+
+        EdgeShape groundShape = new EdgeShape();
+        groundShape.set(new Vector2(-structure.width / 2, -structure.height / 2),
+            new Vector2(structure.width / 2, -structure.height / 2));
+
+        FixtureDef groundFixtureDef = new FixtureDef();
+        groundFixtureDef.shape = groundShape;
+        groundFixtureDef.friction = 5f; // High friction at the base
 
         body.createFixture(fixtureDef);
-        shape.dispose();
+        body.createFixture(groundFixtureDef);
 
-        structure.setBody(body); // Link the structure to its body
+        shape.dispose();
+        groundShape.dispose();
+
+        // Add damping to stabilize motion
+        body.setLinearDamping(0.5f);
+        body.setAngularDamping(0.5f);
+
+        body.setUserData(structure);
+        structure.setBody(body);
     }
 
 
@@ -171,7 +192,7 @@ public class Level2Screen implements Screen {
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-
+        createGroundBody();
         // Add background
         backgroundTexture = new Texture(Gdx.files.internal("game_background.jpg"));
         Image background = new Image(new TextureRegionDrawable(backgroundTexture));
@@ -254,14 +275,25 @@ public class Level2Screen implements Screen {
 
     }
 
+//    private void handleBirdHitsPig(Birds bird, Pig pig) {
+//        if (pig.isAlive()) {
+//            pig.takeDamage(1); // Reduce health by 1
+//            if (!pig.isAlive()) {
+//                world.destroyBody(pig.getBody()); // Destroy the pig's body
+//                pig.setBody(null);
+//
+//                // Move structures or pigs based on bird's final impact
+//                adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
+//            }
+//        }
+//    }
+
     private void handleBirdHitsPig(Birds bird, Pig pig) {
         if (pig.isAlive()) {
             pig.takeDamage(1); // Reduce health by 1
             if (!pig.isAlive()) {
                 world.destroyBody(pig.getBody()); // Destroy the pig's body
                 pig.setBody(null);
-
-                // Move structures or pigs based on bird's final impact
                 adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
             }
         }
@@ -294,18 +326,43 @@ public class Level2Screen implements Screen {
         }
     }
 
+    private void createGroundBody() {
+        BodyDef groundBodyDef = new BodyDef();
+        groundBodyDef.position.set(0, GROUND_LEVEL);
+        groundBodyDef.type = BodyDef.BodyType.StaticBody;
+
+        Body groundBody = world.createBody(groundBodyDef);
+
+        EdgeShape groundShape = new EdgeShape();
+        groundShape.set(new Vector2(0, 0), new Vector2(20, 0)); // Adjust length as needed
+
+        FixtureDef groundFixtureDef = new FixtureDef();
+        groundFixtureDef.shape = groundShape;
+        groundFixtureDef.friction = 0.5f;
+
+        groundBody.createFixture(groundFixtureDef);
+        groundShape.dispose();
+    }
+
+//    private void handleBirdHitsStructure(Birds bird, Structure structure) {
+//        structure.takeDamage(50); // Apply damage to the structure
+//        if (structure.isBroken()) {
+//            world.destroyBody(structure.getBody()); // Destroy the structure's body
+//            structure.setBody(null);
+//
+//            // Move structures or pigs based on bird's final impact
+//            adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
+//        }
+//    }
 
     private void handleBirdHitsStructure(Birds bird, Structure structure) {
         structure.takeDamage(50); // Apply damage to the structure
         if (structure.isBroken()) {
             world.destroyBody(structure.getBody()); // Destroy the structure's body
             structure.setBody(null);
-
-            // Move structures or pigs based on bird's final impact
             adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
         }
     }
-
 
     private void initializePigs() {
         pigs = new LinkedList<>();
@@ -478,8 +535,8 @@ public class Level2Screen implements Screen {
 
         for (Structure structure : structures) {
             batch.draw(structure.getTexture(),
-                (structure.x - structure.width / 2) * PIXELS_PER_METER,  // Center the texture
-                (structure.y - structure.height / 2) * PIXELS_PER_METER,
+                (structure.getBody().getPosition().x- structure.width / 2) * PIXELS_PER_METER,  // Center the texture
+                (structure.getBody().getPosition().y - structure.height / 2) * PIXELS_PER_METER,
                 structure.width * PIXELS_PER_METER,                     // Scale width
                 structure.height * PIXELS_PER_METER);                   // Scale height
         }
@@ -574,8 +631,20 @@ public class Level2Screen implements Screen {
         blackBird.dispose();
 
         for (Structure structure : structures) {
-            structure.dispose();
+            if (structure.getBody() != null) {
+                float currentY = structure.getBody().getPosition().y;
+
+                // Ensure the structure doesn't fall below ground level
+                if (currentY < GROUND_LEVEL + structure.height / 2) {
+                    structure.getBody().setTransform(
+                        structure.getBody().getPosition().x, // Keep the same x position
+                        GROUND_LEVEL + structure.height / 2, // Reset to ground level
+                        structure.getBody().getAngle()      // Preserve the rotation
+                    );
+                }
+            }
         }
+
 
         for (Pig pig : pigs) {
             pig.dispose();

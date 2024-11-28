@@ -9,7 +9,7 @@ public abstract class Structure {
     public float width, height;     //Size
     public int durability;  // Structure strength, higher values are harder to break
     protected Texture texture;
-
+    private Body body;
     public Structure(float x, float y, float width, float height, int durability, String texturePath) {
         this.x = x;
         this.y = y;
@@ -21,7 +21,7 @@ public abstract class Structure {
 
     public void createBody(World world) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
@@ -41,7 +41,7 @@ public abstract class Structure {
         body.setUserData(this); // Attach structure as user data
     }
 
-    private Body body;
+
 
     public void setBody(Body body) {
         this.body = body;
