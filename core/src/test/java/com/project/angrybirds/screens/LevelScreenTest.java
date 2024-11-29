@@ -1,4 +1,4 @@
-package com.project.angrybirds.screens;//package com.project.angrybirds.screens;
+package com.project.angrybirds.screens;
 
 import org.junit.After;
 import org.junit.Before;

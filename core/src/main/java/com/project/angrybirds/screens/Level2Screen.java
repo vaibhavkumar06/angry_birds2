@@ -66,10 +66,6 @@ public class Level2Screen implements Screen {
         Box2D.init();
         world = new World(new com.badlogic.gdx.math.Vector2(0, -9.8f), true);
         batch = new SpriteBatch();
-
-
-
-//        body.setUserData(this);
     }
 
     private void showPauseMenu() {
@@ -102,7 +98,7 @@ public class Level2Screen implements Screen {
         });
 
 
-// Exit Button
+        // Exit Button
         TextButton exitButton = new TextButton("Exit", skin);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -179,7 +175,6 @@ public class Level2Screen implements Screen {
         shape.dispose();
         groundShape.dispose();
 
-        // Add damping to stabilize motion
         body.setLinearDamping(0.5f);
         body.setAngularDamping(0.5f);
 
@@ -193,16 +188,17 @@ public class Level2Screen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         createGroundBody();
-        // Add background
+
+        // Background
         backgroundTexture = new Texture(Gdx.files.internal("game_background.jpg"));
         Image background = new Image(new TextureRegionDrawable(backgroundTexture));
         background.setFillParent(true);
         stage.addActor(background);
 
-// Create a Skin for the button
+        // Skin for the button
         Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // Use default or custom skin
 
-// Create the pause button
+        // Pause button
         TextButton pauseButton = new TextButton("Pause", skin);
         pauseButton.setSize(100, 50); // Adjust size if needed
         pauseButton.setPosition(10, Gdx.graphics.getHeight() - pauseButton.getHeight() - 10);
@@ -217,20 +213,16 @@ public class Level2Screen implements Screen {
             }
         });
 
-// Add the pause button to the stage
+
         stage.addActor(pauseButton);
 
-        // Add catapult
         catapultTexture = new Texture(Gdx.files.internal("catapult.png"));
         createCatapult();
 
-        // Initialize birds
         initializeBirds();
 
-        // Add back button
         addBackButton();
 
-        // Initialize structures
         initializeStructures();
 
         initializePigs();
@@ -275,24 +267,11 @@ public class Level2Screen implements Screen {
 
     }
 
-//    private void handleBirdHitsPig(Birds bird, Pig pig) {
-//        if (pig.isAlive()) {
-//            pig.takeDamage(1); // Reduce health by 1
-//            if (!pig.isAlive()) {
-//                world.destroyBody(pig.getBody()); // Destroy the pig's body
-//                pig.setBody(null);
-//
-//                // Move structures or pigs based on bird's final impact
-//                adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
-//            }
-//        }
-//    }
-
     private void handleBirdHitsPig(Birds bird, Pig pig) {
         if (pig.isAlive()) {
-            pig.takeDamage(1); // Reduce health by 1
+            pig.takeDamage(1);
             if (!pig.isAlive()) {
-                world.destroyBody(pig.getBody()); // Destroy the pig's body
+                world.destroyBody(pig.getBody());
                 pig.setBody(null);
                 adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
             }
@@ -344,16 +323,6 @@ public class Level2Screen implements Screen {
         groundShape.dispose();
     }
 
-//    private void handleBirdHitsStructure(Birds bird, Structure structure) {
-//        structure.takeDamage(50); // Apply damage to the structure
-//        if (structure.isBroken()) {
-//            world.destroyBody(structure.getBody()); // Destroy the structure's body
-//            structure.setBody(null);
-//
-//            // Move structures or pigs based on bird's final impact
-//            adjustNearbyObjects(bird.body.getPosition().x, bird.body.getPosition().y);
-//        }
-//    }
 
     private void handleBirdHitsStructure(Birds bird, Structure structure) {
         structure.takeDamage(50); // Apply damage to the structure
@@ -371,7 +340,6 @@ public class Level2Screen implements Screen {
         pigs.add(new BabyPig(world, 11.6f, 5.35f)); // Pig on top of the rock structure
         pigs.add(new TeenPig(world, 11.6f, 2.75f)); // Pig on ground
         pigs.add(new DaddyPig(world, 11.65f, 3.7f)); // Pig on top of the base top layer wood structure
-//        pigs.add(new BabyPig(world, 10f, 4f)); // Pig on top of the ice structure
     }
 
 
@@ -450,7 +418,6 @@ public class Level2Screen implements Screen {
 
         // If the game is paused, render only the pause menu
         if (isPaused) {
-            // Render the pause menu
             stage.act(delta);
             stage.draw();
             return; // Skip further rendering
